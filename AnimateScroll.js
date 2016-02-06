@@ -1,38 +1,24 @@
 // AnimateScroll.js
 // Sunmock Yang Nov. 2015
 
-function animateScroll2(targetY, onFinish) {
-
-	//var duration = 1000;
-	//var easing = 'easeInOutQuint';
-	//var padding = 10;
-	
-	//var onFinish = onFinish;
-
+// scroll to X pixels
+function animateScrollToPixelPos(targetY, duration, easing, padding, onFinish) {
 
 	var docElem = document.documentElement; // to facilitate minification better
 	var windowHeight = docElem.clientHeight;
 	var maxScroll = ( 'scrollMaxY' in window ) ? window.scrollMaxY : (docElem.scrollHeight - windowHeight);
+	var currentY = window.scrollY;
+
 	targetY = Math.max(Math.min(maxScroll, targetY), 0);
 
-	var currentY = window.scrollY;
-	var deltaY = targetY - currentY;
-
-	var obj = {
-		targetY: targetY,
-		deltaY: deltaY,
-		duration: (duration) ? duration : 0,
-		easing: (easing in animateScroll.Easing) ? animateScroll.Easing[easing] : animateScroll.Easing.linear,
-		onFinish: onFinish,
-		startTime: Date.now(),
-		lastY: currentY,
-		step: animateScroll.step,
-	};
-
-	window.requestAnimationFrame(obj.step.bind(obj));
+	// animate the scrolling
+	_animateScroll(currentY, targetY, duration, easing, onFinish);
 }
 
-function animateScroll(element, duration, easing, padding, align, onFinish) {
+
+// scroll to DOM object
+function animateScrollToObjectPos(element, duration, easing, padding, align, onFinish) {
+
 	var docElem = document.documentElement; // to facilitate minification better
 	var windowHeight = docElem.clientHeight;
 	var maxScroll = ( 'scrollMaxY' in window ) ? window.scrollMaxY : (docElem.scrollHeight - windowHeight);
@@ -58,17 +44,24 @@ function animateScroll(element, duration, easing, padding, align, onFinish) {
 	targetY += elementPos;
 	targetY = Math.max(Math.min(maxScroll, targetY), 0);
 	
+	// animate the scrolling
+	_animateScroll(currentY, targetY, duration, easing, onFinish);
+}
+
+// private function (internal)
+function _animateScroll(currentY, targetY, duration, easing, onFinish) {
+	
 	var deltaY = targetY - currentY;
 
 	var obj = {
 		targetY: targetY,
 		deltaY: deltaY,
 		duration: (duration) ? duration : 0,
-		easing: (easing in animateScroll.Easing) ? animateScroll.Easing[easing] : animateScroll.Easing.linear,
+		easing: (easing in _animateScroll.Easing) ? _animateScroll.Easing[easing] : _animateScroll.Easing.linear,
 		onFinish: onFinish,
 		startTime: Date.now(),
 		lastY: currentY,
-		step: animateScroll.step,
+		step: _animateScroll.step,
 	};
 
 	window.requestAnimationFrame(obj.step.bind(obj));
@@ -76,7 +69,7 @@ function animateScroll(element, duration, easing, padding, align, onFinish) {
 
 // Taken from gre/easing.js
 // https://gist.github.com/gre/1650294
-animateScroll.Easing = {
+_animateScroll.Easing = {
 	linear: function (t) { return t },
 	easeInQuad: function (t) { return t*t },
 	easeOutQuad: function (t) { return t*(2-t) },
@@ -92,7 +85,7 @@ animateScroll.Easing = {
 	easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
 };
 
-animateScroll.step = function () {
+_animateScroll.step = function () {
 	if (this.lastY != window.scrollY && this.onFinish) {
 		this.onFinish();
 		return;
