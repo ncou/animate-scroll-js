@@ -1,6 +1,37 @@
 // AnimateScroll.js
 // Sunmock Yang Nov. 2015
 
+function animateScroll2(targetY, onFinish) {
+
+	//var duration = 1000;
+	//var easing = 'easeInOutQuint';
+	//var padding = 10;
+	
+	//var onFinish = onFinish;
+
+
+	var docElem = document.documentElement; // to facilitate minification better
+	var windowHeight = docElem.clientHeight;
+	var maxScroll = ( 'scrollMaxY' in window ) ? window.scrollMaxY : (docElem.scrollHeight - windowHeight);
+	targetY = Math.max(Math.min(maxScroll, targetY), 0);
+
+	var currentY = window.scrollY;
+	var deltaY = targetY - currentY;
+
+	var obj = {
+		targetY: targetY,
+		deltaY: deltaY,
+		duration: (duration) ? duration : 0,
+		easing: (easing in animateScroll.Easing) ? animateScroll.Easing[easing] : animateScroll.Easing.linear,
+		onFinish: onFinish,
+		startTime: Date.now(),
+		lastY: currentY,
+		step: animateScroll.step,
+	};
+
+	window.requestAnimationFrame(obj.step.bind(obj));
+}
+
 function animateScroll(element, duration, easing, padding, align, onFinish) {
 	var docElem = document.documentElement; // to facilitate minification better
 	var windowHeight = docElem.clientHeight;
