@@ -38,6 +38,9 @@
 <h1>AnimateScroll.js</h1>
 <p><a href="https://github.com/sunmockyang">Sunmock Yang</a>, November 2015</p>
 
+<button onclick="animateScrollToPixelPos(600, 1000, 'easeInOutQuint', 10, function () {console.log('finished');})">Scroll down to 600 pixels!</button><br><br>
+<button onclick="animateScrollToObjectPos(document.getElementById('toto'), 1000, 'easeInOutQuint', 10, top, function () {console.log('finished');})">Scroll down to toto pixels!</button><br><br>
+
 <div>
 Duration(ms): <input id="duration-input" type="text" value="1000" onkeyup="updateExampleCode()"/>
 <br/>
@@ -101,7 +104,7 @@ function main() {
 
 		// animateScroll.js
 		navLink.onclick = (function() {
-			animateScroll(this, duration, easing, padding, align, function () {console.log("finished");});
+			animateScrollToObjectPos(this, duration, easing, padding, align, function () {console.log('finished');});
 		}).bind(pageItem);
 	};
 }
@@ -112,7 +115,7 @@ function updateExampleCode () {
 	padding = Number(document.getElementById("padding-input").value);
 	align = document.getElementById("align-input").value;
 
-	document.getElementById("example").innerHTML = "animateScroll(element, " + duration + ", '" + easing + "', " + padding + ", " + align + ", onFinish);";
+	document.getElementById("example").innerHTML = "animateScrollToObjectPos(element, " + duration + ", '" + easing + "', " + padding + ", " + align + ", onFinish);";
 }
 
 function createNavLink (i, color) {
@@ -151,13 +154,13 @@ function randomColor() {
 
 window.onload = main;
 
+
+
+
 </script>
+
+<div id='toto'>TOTO</div>
+
 <script type="text/javascript" src="../AnimateScroll.js"></script>
-<script type="text/javascript">
-	//callback after the scroll is finished
-	function onFinish() {
-		alert('finsh');
-	}
-</script>
 </body>
 </html>
